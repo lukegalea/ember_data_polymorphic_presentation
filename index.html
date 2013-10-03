@@ -74,7 +74,7 @@
 
 				<section data-markdown>
 					<script type="text/template">
-						## Rails Data Model
+						Rails Data Model
 
 
 						```ruby
@@ -98,58 +98,163 @@ end
 				</section>
 
 				<section data-markdown>
-					<h2>Rails STI</h2>
-					<pre><code data-trim contenteditable>
-						function linkify( selector ) {
-						  if( supports3DTransforms ) {
-
-						    var nodes = document.querySelectorAll( selector );
-
-						    for( var i = 0, len = nodes.length; i &lt; len; i++ ) {
-						      var node = nodes[i];
-
-						      if( !node.className ) ) {
-						        node.className += ' roll';
-						      }
-						    };
-						  }
-						}
-					</code></pre>
-				</section>
-
-				<section data-markdown>
 					<script type="text/template">
-						## Ember-Data v0.14
+						Old School Ember-Data (< v1.0)
 
-						Here is how you do it in old school ember-data
+						```coffeescript
+App.Form = DS.Model.extend
+  formElements:  DS.hasMany 'App.FormElement', polymorphic: true
+
+App.FormElement = DS.Model.extend
+  form: DS.belongsTo 'App.Form'
+
+App.TextElement = AdminApp.FormElement.extend
+  placeholder: DS.attr 'string' #for example
+						```
 					</script>
 				</section>
 
 				<section data-markdown>
 					<script type="text/template">
-						## Ember-Data v1 beta
+						Server Side
 
-						Here is how you do it in new school ember-data
+						```ruby
+# Serializer for GET /forms/:form_id
+
+class FormSerializer < ActiveModel::Serializer
+  attributes :id, :name, :form_element_ids, :title
+
+  def form_element_ids
+    object.form_elements.map do |e|
+      {
+        id: e.id,
+        type: e.type
+      }
+    end
+  end
+end
+						```
 					</script>
 				</section>
 
 				<section data-markdown>
 					<script type="text/template">
-						## Gotchas
+						## It's go time!
+
+						```coffeescript
+form = App.Form.find(1)
+form.get('formElements')
+
+# GET /forms/1
+# GET /date_elements?ids%5B%5D=151
+# GET /text_elements?ids%5B%5D=150&ids%5B%5D=149&ids%5B%5D=148
+
+# Sweet.. these are a mix of different types
+						```
 					</script>
 				</section>
 
 				<section data-markdown>
 					<script type="text/template">
-						## Rendering views dynamically based on type
+						New School Ember-Data (v1.0+)
 
-						Here is how you do it in new school ember-data
+						Requires edge!
+
+						```coffeescript
+App.ApplicationAdapter = DS.ActiveModelAdapter.extend {}
+
+App.Form = DS.Model.extend
+  formElements:  DS.hasMany 'formElement', polymorphic: true, async: true
+
+# Everything else is unchanged from "Old School"
+						```
 					</script>
 				</section>
 
 				<section data-markdown>
 					<script type="text/template">
-						## Demo of Form Builder
+						New School Server Side
+
+						```ruby
+# Serializer for GET /forms/:form_id
+
+class FormSerializer < ActiveModel::Serializer
+  attributes :id, :name, :form_elements, :title
+
+  # It's form_elements not form_element_ids now!
+  def form_elements
+    object.form_elements.map do |e|
+      {
+        id: e.id,
+        type: e.type
+      }
+    end
+  end
+end
+						```
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						## Go time.. again..
+
+						```coffeescript
+form = App.Form.find(1)
+form.get('formElements').then (element) ->
+	# Sweet.. these are a mix of different types
+						```
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						## Gotcha!
+
+						```coffeescript
+form = App.Form.find(1)
+form.get('formElements').then (element) ->
+	# This promise resolves when the first "type" has deserialized
+						```
+
+						https://github.com/emberjs/data/issues/1412
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						Rendering views dynamically based on type
+
+						```handlebars
+<p>
+	<label>{{name}}</label>
+	{{view view.elementViewType}}
+</p>
+						```
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						Rendering views dynamically based on type
+
+						```coffeescript
+App.FormElementView = Em.View.extend
+  elementViewType: (->
+    elementType = this.get('context.model').constructor.toString()
+
+    switch elementType
+      when 'App.CheckListElement'   then App.CheckListView
+      when 'App.RadioButtonElement' then App.RadioButtonView
+      # etc, etc, etc
+      else
+        throw "Unknown element type #{elementType}"
+  ).property 'context.model'
+
+  _elementViewTypeChanged: (->
+    @rerender()
+  ).observes 'elementViewType'
+						```
 					</script>
 				</section>
 			</div>
