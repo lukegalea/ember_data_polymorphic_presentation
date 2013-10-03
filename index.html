@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Ember Data: Polymorphic Associations</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/simple.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Ember Data: Polymorphic Associations</h1>
+					<h3>... for fun and profit</h3>
+					<p>
+						<small>Created by <a href="http://ideaforge.org">Luke Galea</a> / <a href="http://twitter.com/lukegalea">@lukegalea</a></small>
+					</p>
+					<p>
+						<small><a href="http://www.precisionnutrition.com">Precision Nutrition</a></small>
+					</p>
+					<p>
+						<img src="images/pn-icon-large.png"/>
+					</p>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						## Why?
+
+
+						We needed a dynamic "Form Engine" like Wufoo
+
+
+						.. only Ember and not shitty
+						![Pic of Wufoo Form Editor](images/wufoo.png)
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						## Pseudo-UML
+
+
+						![Form Data Model](images/data_model.svg)
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						## Rails Data Model
+
+
+						```ruby
+class Form < ActiveRecord::Base
+	has_many :form_elements
+end
+
+class FormElement < ActiveRecord::Base
+  belongs_to :form
+end
+
+class TextElement < FormElement
+end
+
+class NumberElement < FormElement
+  validates ... #yada yada yada
+end
+
+						```
+					</script>
+				</section>
+
+				<section data-markdown>
+					<h2>Rails STI</h2>
+					<pre><code data-trim contenteditable>
+						function linkify( selector ) {
+						  if( supports3DTransforms ) {
+
+						    var nodes = document.querySelectorAll( selector );
+
+						    for( var i = 0, len = nodes.length; i &lt; len; i++ ) {
+						      var node = nodes[i];
+
+						      if( !node.className ) ) {
+						        node.className += ' roll';
+						      }
+						    };
+						  }
+						}
+					</code></pre>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						## Ember-Data v0.14
+
+						Here is how you do it in old school ember-data
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						## Ember-Data v1 beta
+
+						Here is how you do it in new school ember-data
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						## Gotchas
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						## Rendering views dynamically based on type
+
+						Here is how you do it in new school ember-data
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						## Demo of Form Builder
+					</script>
+				</section>
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
