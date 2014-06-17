@@ -6,8 +6,8 @@
 
 		<title>Ember Data: Polymorphic Associations</title>
 
-		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
-		<meta name="author" content="Hakim El Hattab">
+		<meta name="description" content="A deep dive into ember-data polymorphic associations">
+		<meta name="author" content="Luke Galea">
 
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -38,7 +38,6 @@
 			<div class="slides">
 				<section>
 					<h1>Ember Data: Polymorphic Associations</h1>
-					<h3>... for fun and profit</h3>
 					<p>
 						<small>Created by <a href="http://ideaforge.org">Luke Galea</a> / <a href="http://twitter.com/lukegalea">@lukegalea</a></small>
 					</p>
@@ -52,14 +51,52 @@
 
 				<section data-markdown>
 					<script type="text/template">
-						## Why?
+						## Precision Nutrition
 
+						Nutrition and fitness coaching
+					</script>
+				</section>
 
-						We needed a dynamic "Form Engine" like Wufoo
+				<section data-markdown>
+					<script type="text/template">
+						What are polymorphic associations?
+					</script>
+				</section>
 
+				<section data-markdown>
+					<script type="text/template">
+						A lot of our "problems" can be solved using polymorphic associations.
+					</script>
+				</section>
 
-						.. only Ember and not shitty
+				<section data-markdown>
+					<script type="text/template">
+						CRM:
+							* User has contact methods
+								* Contact method can be: email, IM, phone, address, etc
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						LMS:
+							* A "lesson" is composed of videos, text, form elements
 						![Pic of Wufoo Form Editor](images/wufoo.png)
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						Classic examples of polymorphism:
+							* Comments on posts or pages or other comments
+							* Vector graphics
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						"When all you have is a hammer, every problem resembles a nail."
+						- Anonymous
 					</script>
 				</section>
 
@@ -99,87 +136,30 @@ end
 
 				<section data-markdown>
 					<script type="text/template">
-						Old School Ember-Data (< v1.0)
+						Ember-Data
 
 						```coffeescript
 App.Form = DS.Model.extend
-  formElements:  DS.hasMany 'App.FormElement', polymorphic: true
+  formElements:  hasMany 'formElement', polymorphic: true, async: true
 
-App.FormElement = DS.Model.extend
-  form: DS.belongsTo 'App.Form'
+App.FormElement = Model.extend
+  form: belongsTo 'Form'
 
 App.TextElement = AdminApp.FormElement.extend
-  placeholder: DS.attr 'string' #for example
+  placeholder: DS.attr 'string'
 						```
 					</script>
 				</section>
 
 				<section data-markdown>
 					<script type="text/template">
-						Server Side
+						Rails Server Side
 
 						```ruby
 # Serializer for GET /forms/:form_id
 
 class FormSerializer < ActiveModel::Serializer
-  attributes :id, :name, :form_element_ids, :title
-
-  def form_element_ids
-    object.form_elements.map do |e|
-      {
-        id: e.id,
-        type: e.type
-      }
-    end
-  end
-end
-						```
-					</script>
-				</section>
-
-				<section data-markdown>
-					<script type="text/template">
-						## It's go time!
-
-						```coffeescript
-form = App.Form.find(1)
-form.get('formElements')
-
-# GET /forms/1
-# GET /date_elements?ids%5B%5D=151
-# GET /text_elements?ids%5B%5D=150&ids%5B%5D=149&ids%5B%5D=148
-
-# Sweet.. these are a mix of different types
-						```
-					</script>
-				</section>
-
-				<section data-markdown>
-					<script type="text/template">
-						New School Ember-Data (v1.0+)
-
-						Requires edge!
-
-						```coffeescript
-App.ApplicationAdapter = DS.ActiveModelAdapter.extend {}
-
-App.Form = DS.Model.extend
-  formElements:  DS.hasMany 'formElement', polymorphic: true, async: true
-
-# Everything else is unchanged from "Old School"
-						```
-					</script>
-				</section>
-
-				<section data-markdown>
-					<script type="text/template">
-						New School Server Side
-
-						```ruby
-# Serializer for GET /forms/:form_id
-
-class FormSerializer < ActiveModel::Serializer
-  attributes :id, :name, :form_elements, :title
+  attributes :id, :name, :form_elements, :position
 
   # It's form_elements not form_element_ids now!
   def form_elements
@@ -204,6 +184,63 @@ form = App.Form.find(1)
 form.get('formElements').then (element) ->
 	# Sweet.. these are a mix of different types
 						```
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						## Gotcha
+
+						```coffeescript
+form.get('formElements').then (element) ->
+	# GET /forms/1
+	# GET /date_elements?ids%5B%5D=151
+	# GET /text_elements?ids%5B%5D=150&ids%5B%5D=149&ids%5B%5D=148
+						```
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						Show a screenshot of network activity
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						Solution: "include"
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						Including doesn't always work.
+
+						Classic case of a huge list that you only want to dig into upon click.
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						This isn't any different than any model with many async associations,
+						but it can become a problem earlier because it's easy to have many
+						different polymorphic sub-classes, each of which generates another query
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						Solution: different serializers for show vs index
+
+						Call reload to get them all.
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						Solution: custom endpoint
+
+						Custom ajax call and store.push
 					</script>
 				</section>
 
