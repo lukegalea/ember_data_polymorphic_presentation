@@ -1,122 +1,246 @@
 <!doctype html>
 <html lang="en">
 
-	<head>
-		<meta charset="utf-8">
+  <head>
+    <meta charset="utf-8">
 
-		<title>Ember Data: Polymorphic Associations</title>
+    <title>Ember Data: Polymorphic Associations</title>
 
-		<meta name="description" content="A deep dive into ember-data polymorphic associations">
-		<meta name="author" content="Luke Galea">
+    <meta name="description" content="A deep dive into ember-data polymorphic associations">
+    <meta name="author" content="Luke Galea">
 
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<link rel="stylesheet" href="css/reveal.min.css">
-		<link rel="stylesheet" href="css/theme/simple.css" id="theme">
+    <link rel="stylesheet" href="css/reveal.min.css">
+    <link rel="stylesheet" href="css/theme/simple.css" id="theme">
 
-		<!-- For syntax highlighting -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
 
-		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
-		<script>
-			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
-		</script>
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+      document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+    </script>
 
-		<!--[if lt IE 9]>
-		<script src="lib/js/html5shiv.js"></script>
-		<![endif]-->
-	</head>
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
 
-	<body>
+  <body>
 
-		<div class="reveal">
+  <!-- What is polymorphic associations
+  What are some good use cases?
 
-			<!-- Any section element inside of this container is displayed as a slide -->
-			<div class="slides">
-				<section>
-					<h1>Ember Data: Polymorphic Associations</h1>
-					<p>
-						<small>Created by <a href="http://ideaforge.org">Luke Galea</a> / <a href="http://twitter.com/lukegalea">@lukegalea</a></small>
-					</p>
-					<p>
-						<small><a href="http://www.precisionnutrition.com">Precision Nutrition</a></small>
-					</p>
-					<p>
-						<img src="images/pn-icon-large.png"/>
-					</p>
-				</section>
+  What does the API look like?
 
-				<section data-markdown>
-					<script type="text/template">
-						## Precision Nutrition
+  What are some problems with it?
 
-						Nutrition and fitness coaching
-					</script>
-				</section>
+  Cool stuff you can do with it (composing interfaces, legacy API, etc)
 
-				<section data-markdown>
-					<script type="text/template">
-						What are polymorphic associations?
-					</script>
-				</section>
+  How can I learn more? -->
 
-				<section data-markdown>
-					<script type="text/template">
-						A lot of our "problems" can be solved using polymorphic associations.
-					</script>
-				</section>
+    <div class="reveal">
 
-				<section data-markdown>
-					<script type="text/template">
-						CRM:
-							* User has contact methods
-								* Contact method can be: email, IM, phone, address, etc
-					</script>
-				</section>
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+        <section>
+          <h1>Ember Data: Polymorphic Associations</h1>
+          <p>
+            <small>Created by <a href="http://ideaforge.org">Luke Galea</a> / <a href="http://twitter.com/lukegalea">@lukegalea</a></small>
+          </p>
+          <p>
+            <small><a href="http://www.precisionnutrition.com">Precision Nutrition</a></small>
+          </p>
+          <p>
+            <img src="images/pn-icon-large.png"/>
+          </p>
+        </section>
 
-				<section data-markdown>
-					<script type="text/template">
-						LMS:
-							* A "lesson" is composed of videos, text, form elements
-						![Pic of Wufoo Form Editor](images/wufoo.png)
-					</script>
-				</section>
+        <section data-markdown>
+          <script type="text/template">
+            ## Precision Nutrition
 
-				<section data-markdown>
-					<script type="text/template">
-						Classic examples of polymorphism:
-							* Comments on posts or pages or other comments
-							* Vector graphics
-					</script>
-				</section>
+            ![Badgey](images/badgey-happy2x.png)
 
-				<section data-markdown>
-					<script type="text/template">
-						"When all you have is a hammer, every problem resembles a nail."
-						- Anonymous
-					</script>
-				</section>
+            Nutrition and fitness coaching
+          </script>
+        </section>
 
-				<section data-markdown>
-					<script type="text/template">
-						## Pseudo-UML
+        <section data-markdown>
+          <script type="text/template">
+            What are polymorphic associations?
+          </script>
+        </section>
 
+        <section data-markdown>
+          <script type="text/template">
+            "a relationship from one class to multiple classes"
+          </script>
+        </section>
 
-						![Form Data Model](images/data_model.svg)
-					</script>
-				</section>
+        <section data-markdown>
+          <script type="text/template">
+            Lots of things can **cause** an explosion:
 
-				<section data-markdown>
-					<script type="text/template">
-						Rails Data Model
+            ```javascript
+App.Explosion = DS.Model.extend({
+  size: DS.attr 'number'
+  cause: belongsTo 'cause', polymorphic: true
+});
+            ```
+
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ![GasolineFight](images/zoolander_gasoline_fight_1.jpg)
+
+            ```javascript
+App.GasolineFight = DS.Model.extend({
+  litres: DS.attr 'number'
+});
+            ```
+          </script>
+        </section>
 
 
-						```ruby
+        <section data-markdown>
+          <script type="text/template">
+            ![Explosion](images/catexplosion.jpg)
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ![Bomb](images/old_bomb.jpg)
+
+            ```javascript
+App.Bomb = DS.Model.extend({
+  megatons: DS.attr 'number'
+});
+            ```
+
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            No common base class is required
+
+
+
+            ```javascript
+App.Explosion = DS.Model.extend({
+  size: DS.attr 'number'
+  cause: belongsTo 'cause', polymorphic: true
+});
+
+App.Bomb = DS.Model.extend({
+  megatons: DS.attr 'number'
+});
+            ```
+
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            A **drawing** is made of many **shape**s:
+
+            ```javascript
+App.Drawing = DS.Model.extend({
+  shapes: belongsTo 'shape', polymorphic: true
+});
+            ```
+
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            <img src="images/house_shapes.png" height="200"/>
+
+            ```javascript
+App.Shape = DS.Model.extend({
+  x: DS.attr 'number'
+  y: DS.attr 'number'
+  color: DS.attr 'string'
+});
+
+App.Rectangle = App.Shape.extend({
+  height: DS.attr 'number'
+  width: DS.attr 'number'
+});
+
+App.Circle = App.Shape.extend({
+  radius: DS.attr 'number'
+});
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            "When all you have is a hammer, every problem resembles a nail."
+            - Anonymous
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            "We use ED Polymorphic assocations a lot.."
+            - me
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            A student curriculum is composed of many types of **Card**s.
+            ![Cards](images/cards_composed.png)
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            A **Card** is composed of many primitive elements.
+            ![Card Admin](images/card_admin.png)
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            <img src="images/how_does_it_work.jpg" height="600px"/>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Note: we cannot do class-based polymorphism (find all causes, etc)
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## Pseudo-UML
+
+
+            ![Form Data Model](images/data_model.svg)
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Rails Data Model
+
+
+            ```ruby
 class Form < ActiveRecord::Base
-	has_many :form_elements
+  has_many :form_elements
 end
 
 class FormElement < ActiveRecord::Base
@@ -130,15 +254,15 @@ class NumberElement < FormElement
   validates ... #yada yada yada
 end
 
-						```
-					</script>
-				</section>
+            ```
+          </script>
+        </section>
 
-				<section data-markdown>
-					<script type="text/template">
-						Ember-Data
+        <section data-markdown>
+          <script type="text/template">
+            Ember-Data
 
-						```coffeescript
+            ```coffeescript
 App.Form = DS.Model.extend
   formElements:  hasMany 'formElement', polymorphic: true, async: true
 
@@ -147,15 +271,15 @@ App.FormElement = Model.extend
 
 App.TextElement = AdminApp.FormElement.extend
   placeholder: DS.attr 'string'
-						```
-					</script>
-				</section>
+            ```
+          </script>
+        </section>
 
-				<section data-markdown>
-					<script type="text/template">
-						Rails Server Side
+        <section data-markdown>
+          <script type="text/template">
+            Rails Server Side
 
-						```ruby
+            ```ruby
 # Serializer for GET /forms/:form_id
 
 class FormSerializer < ActiveModel::Serializer
@@ -171,111 +295,119 @@ class FormSerializer < ActiveModel::Serializer
     end
   end
 end
-						```
-					</script>
-				</section>
+            ```
+          </script>
+        </section>
 
-				<section data-markdown>
-					<script type="text/template">
-						## Go time.. again..
+        <section data-markdown>
+          <script type="text/template">
+            ## Go time.. again..
 
-						```coffeescript
+            ```coffeescript
 form = App.Form.find(1)
 form.get('formElements').then (element) ->
-	# Sweet.. these are a mix of different types
-						```
-					</script>
-				</section>
+  # Sweet.. these are a mix of different types
+            ```
+          </script>
+        </section>
 
-				<section data-markdown>
-					<script type="text/template">
-						## Gotcha
+        <section data-markdown>
+          <script type="text/template">
+            ## Gotcha
 
-						```coffeescript
+            ```coffeescript
 form.get('formElements').then (element) ->
-	# GET /forms/1
-	# GET /date_elements?ids%5B%5D=151
-	# GET /text_elements?ids%5B%5D=150&ids%5B%5D=149&ids%5B%5D=148
-						```
-					</script>
-				</section>
+  # GET /forms/1
+  # GET /date_elements?ids%5B%5D=151
+  # GET /text_elements?ids%5B%5D=150&ids%5B%5D=149&ids%5B%5D=148
+            ```
+          </script>
+        </section>
 
-				<section data-markdown>
-					<script type="text/template">
-						Show a screenshot of network activity
-					</script>
-				</section>
+        <section data-markdown>
+          <script type="text/template">
+            Show a screenshot of network activity
+          </script>
+        </section>
 
-				<section data-markdown>
-					<script type="text/template">
-						Solution: "include"
-					</script>
-				</section>
+        <section data-markdown>
+          <script type="text/template">
+            Solution: "include"
+          </script>
+        </section>
 
-				<section data-markdown>
-					<script type="text/template">
-						Including doesn't always work.
+        <section data-markdown>
+          <script type="text/template">
+            Including doesn't always work.
 
-						Classic case of a huge list that you only want to dig into upon click.
-					</script>
-				</section>
+            Classic case of a huge list that you only want to dig into upon click.
+          </script>
+        </section>
 
-				<section data-markdown>
-					<script type="text/template">
-						This isn't any different than any model with many async associations,
-						but it can become a problem earlier because it's easy to have many
-						different polymorphic sub-classes, each of which generates another query
-					</script>
-				</section>
+        <section data-markdown>
+          <script type="text/template">
+            This isn't any different than any model with many async associations,
+            but it can become a problem earlier because it's easy to have many
+            different polymorphic sub-classes, each of which generates another query
+          </script>
+        </section>
 
-				<section data-markdown>
-					<script type="text/template">
-						Solution: different serializers for show vs index
+        <section data-markdown>
+          <script type="text/template">
+            Solution: different serializers for show vs index
 
-						Call reload to get them all.
-					</script>
-				</section>
+            Call reload to get them all.
+          </script>
+        </section>
 
-				<section data-markdown>
-					<script type="text/template">
-						Solution: custom endpoint
+        <section data-markdown>
+          <script type="text/template">
+            Solution: custom endpoint
 
-						Custom ajax call and store.push
-					</script>
-				</section>
+            Custom ajax call and store.push
+          </script>
+        </section>
 
-				<section data-markdown>
-					<script type="text/template">
-						## Gotcha!
+        <section data-markdown>
+          <script type="text/template">
+            Other cool stuff: different APIs (legacy vs normal?)
 
-						```coffeescript
+            Links? Or custom adapters?
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ## Gotcha!
+
+            ```coffeescript
 form = App.Form.find(1)
 form.get('formElements').then (element) ->
-	# This promise resolves when the first "type" has deserialized
-						```
+  # This promise resolves when the first "type" has deserialized
+            ```
 
-						https://github.com/emberjs/data/issues/1412
-					</script>
-				</section>
+            https://github.com/emberjs/data/issues/1412
+          </script>
+        </section>
 
-				<section data-markdown>
-					<script type="text/template">
-						Rendering views dynamically based on type
+        <section data-markdown>
+          <script type="text/template">
+            Rendering views dynamically based on type
 
-						```handlebars
+            ```handlebars
 <p>
-	<label>{{name}}</label>
-	{{view view.elementViewType}}
+  <label>{{name}}</label>
+  {{view view.elementViewType}}
 </p>
-						```
-					</script>
-				</section>
+            ```
+          </script>
+        </section>
 
-				<section data-markdown>
-					<script type="text/template">
-						Rendering views dynamically based on type
+        <section data-markdown>
+          <script type="text/template">
+            Rendering views dynamically based on type
 
-						```coffeescript
+            ```coffeescript
 App.FormElementView = Em.View.extend
   elementViewType: (->
     elementType = this.get('context.model').constructor.toString()
@@ -291,50 +423,50 @@ App.FormElementView = Em.View.extend
   _elementViewTypeChanged: (->
     @rerender()
   ).observes 'elementViewType'
-						```
-					</script>
-				</section>
+            ```
+          </script>
+        </section>
 
-				<section data-markdown>
-					<script type="text/template">
-						Thanks!!
+        <section data-markdown>
+          <script type="text/template">
+            Thanks!!
 
 
-						http://lukegalea.github.io/ember_data_polymorphic_presentation
-					</script>
-				</section>
-			</div>
+            http://lukegalea.github.io/ember_data_polymorphic_presentation
+          </script>
+        </section>
+      </div>
 
-		</div>
+    </div>
 
-		<script src="lib/js/head.min.js"></script>
-		<script src="js/reveal.min.js"></script>
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.min.js"></script>
 
-		<script>
+    <script>
 
-			// Full list of configuration options available here:
-			// https://github.com/hakimel/reveal.js#configuration
-			Reveal.initialize({
-				controls: true,
-				progress: true,
-				history: true,
-				center: true,
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
 
-				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
-				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
 
-				// Optional libraries used to extend on reveal.js
-				dependencies: [
-					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
-					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
-					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
-				]
-			});
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+        ]
+      });
 
-		</script>
+    </script>
 
-	</body>
+  </body>
 </html>
