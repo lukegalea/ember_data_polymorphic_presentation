@@ -201,20 +201,241 @@ App.Circle = App.Shape.extend({
         <section data-markdown>
           <script type="text/template">
             A student curriculum is composed of many types of **Card**s.
-            ![Cards](images/cards_composed.png)
+            <img height="650" src="images/cards_composed.png"/>
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
             A **Card** is composed of many primitive elements.
-            ![Card Admin](images/card_admin.png)
+            <img src="images/card_admin.png" height="650"/>
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
             <img src="images/how_does_it_work.jpg" height="600px"/>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            {JSON:API} does not specify a format for polymorphic assocations
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            <img src="images/house_shapes.png" height="200"/>
+
+
+            ```javascript
+            {
+              "drawing":{
+                "id":1,
+                "title":"A house",
+                "shapes":[
+                  {
+                    "id":1,
+                    "type":"Rectangle"
+                  },
+                  {
+                    "id":2,
+                    "type":"Rectangle"
+                  },
+                  {
+                    "id":3,
+                    "type":"Triangle"
+                  }
+                ]
+              }
+            }
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Or for a belongsTo
+
+            ```javascript
+            {
+              "dog":{
+                ...
+                "owner": {
+                  "id":1,
+                  "type":"Human"
+                }
+            }
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Active Model Serializer does not support polymorphic assocations
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            <img src="images/rails.png"/>
+
+
+            ```ruby
+              class DrawingSerializer < ActiveModel::Serializer
+                attributes :id, :title, :shapes
+
+                def shapes
+                  object.shapes.map { |e| { id: e.id, type: e.type } }
+                end
+              end
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            <img src="images/rails.png"/>
+
+            belongsTo
+
+            ```ruby
+              class DogSerializer < ActiveModel::Serializer
+                ...
+                def owner
+                  { id: object.owner.id, type: object.owner.type } if object.owner
+                end
+              end
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            3 seperate requests
+
+            ({Number of types} + 1)
+
+            <img src="images/requests_1.png"/>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            This can add up pretty quickly
+
+            <img src="images/request_2.png"/>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            But at least they are executed concurrently
+
+            <img src="images/requests_3.png"/>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Or you can sideload...
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            <img src="images/rails.png"/>
+
+
+            ```ruby
+              class DrawingSerializer < ActiveModel::Serializer
+                .......
+
+                has_many :triangles,  include: true, embed: :ids
+                has_many :rectangles, include: true, embed: :ids
+              end
+
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            <img src="images/house_shapes.png" height="100"/>
+
+            ```javascript
+            {
+              "drawing":{
+                ......
+                "triangle_ids":[3],    // Redundant
+                "rectangle_ids":[1, 2] // Redundant
+              },
+              "triangles":[
+                {
+                  "id":3,
+                  "x":0,
+                  "y":0,
+                  "fill":"blue",
+                  "width":"200",
+                  "height":"100",
+                  "drawing_id":1
+                }
+              ],
+              "rectangles":[
+                .....
+              ]
+            }
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Stuff that is broken
+
+            <img src="images/broken.jpg"/>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Saving without resolving first
+
+            ```javascript
+              App.Drawing = DS.Model.extend({
+                shapes: belongsTo 'shape', polymorphic: true, async: true
+              });
+
+              store.find('drawing', 1).then(function(drawing) {
+                drawing.set('title', 'Mona Lisa');
+                // Must resolve shapes first!
+                drawing.save();
+              });
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Reloading a polymorphic hasMany
+
+            ```javascript
+              store.find('drawing', 1).then(function(drawing) {
+                drawing.get('shapes').then(function(shapes) {
+                  // Requires https://github.com/emberjs/data/commits/reloadHasManyAttempt2
+                  shapes.reload();
+                });
+              });
+
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Composing views using polymorphic models
+            <img src="images/bob.jpg"/>
           </script>
         </section>
 
