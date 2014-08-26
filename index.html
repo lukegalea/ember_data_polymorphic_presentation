@@ -86,10 +86,10 @@
           <script type="text/template">
             Lots of things can **cause** an explosion:
 
-            ```javascript
+            ```js
 App.Explosion = DS.Model.extend({
   size: DS.attr('number'),
-  cause: belongsTo('cause', polymorphic: true)
+  cause: belongsTo('cause', { polymorphic: true })
 });
             ```
 
@@ -100,7 +100,7 @@ App.Explosion = DS.Model.extend({
           <script type="text/template">
             ![GasolineFight](images/zoolander_gasoline_fight_1.jpg)
 
-            ```javascript
+            ```js
 App.GasolineFight = DS.Model.extend({
   litres: DS.attr('number')
 });
@@ -119,7 +119,7 @@ App.GasolineFight = DS.Model.extend({
           <script type="text/template">
             ![Bomb](images/old_bomb.jpg)
 
-            ```javascript
+            ```js
 App.Bomb = DS.Model.extend({
   megatons: DS.attr('number')
 });
@@ -130,20 +130,43 @@ App.Bomb = DS.Model.extend({
 
         <section data-markdown>
           <script type="text/template">
-            No common base class is required
+            As of Ember-Data 1.0b9
 
+            a common base class is required
 
+            ```js
+App.Cause = DS.Model.extend({
+  ...
+});
 
-            ```javascript
-App.GasolineFight = DS.Model.extend({
+App.Bomb = App.Cause.extend({
+  ...
+});
+
+App.GasolineFight = App.Cause.extend({
+  ...
+});
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Actually.. it&apos;s just that a common base class must exist
+
+            ```js
+App.Cause = DS.Model.extend({
   ...
 });
 
 App.Bomb = DS.Model.extend({
   ...
 });
-            ```
 
+App.GasolineFight = DS.Model.extend({
+  ...
+});
+            ```
           </script>
         </section>
 
@@ -151,9 +174,9 @@ App.Bomb = DS.Model.extend({
           <script type="text/template">
             A **drawing** is made of many **shape**s:
 
-            ```javascript
+            ```js
 App.Drawing = DS.Model.extend({
-  shapes: belongsTo('shape', polymorphic: true)
+  shapes: belongsTo('shape', { polymorphic: true })
 });
             ```
 
@@ -363,7 +386,7 @@ App.Circle = App.Shape.extend({
           <script type="text/template">
             <img src="images/house_shapes.png" height="100"/>
 
-            ```javascript
+            ```js
             {
               "drawing":{
                 ......
@@ -413,7 +436,7 @@ App.Circle = App.Shape.extend({
           <script type="text/template">
             A helper to dynamically render a component
 
-            ```javascript
+            ```js
               var H = Em.Handlebars;
 
               H.registerHelper('renderComponent',
@@ -439,7 +462,7 @@ App.Circle = App.Shape.extend({
             Component
             ```coffeescript
             SVGDisplay = Em.Component.extend
-              template: H.compile '{{render-component "shapeComponent" shape=shape}}'
+              template: H.compile '{{render-component "shapeComponent" shapeBinding="shape"}}'
               shapeType: alias 'shape.shapeType'
 
               shapeComponent: (->
@@ -459,6 +482,8 @@ App.Circle = App.Shape.extend({
 
             Specify different adapter for each type
 
+            Confirm ?? - Does this work?
+
             ```coffeescript
 
             ```
@@ -477,7 +502,7 @@ App.Circle = App.Shape.extend({
           <script type="text/template">
             Saving without resolving first
 
-            ```javascript
+            ```js
               App.Drawing = DS.Model.extend({
                 shapes: belongsTo('shape', polymorphic: true, async: true)
               });
@@ -495,7 +520,7 @@ App.Circle = App.Shape.extend({
           <script type="text/template">
             Reloading a polymorphic hasMany
 
-            ```javascript
+            ```js
             store.find('drawing', 1).then(function(drawing) {
               drawing.get('shapes').then(function(shapes) {
                 shapes.reload();
@@ -513,12 +538,20 @@ App.Circle = App.Shape.extend({
 
             Not **polymorphic endpoints**
 
-            ```javascript
+            ```js
             store.find('vehicles').then(function(vehicles) {
               // Where vehicle could be a car, truck, boat
               // Does *not* work
             });
             ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Fixture adapter does not support polymorphic associations
+
+            ???? (Confirm - is this true?)
           </script>
         </section>
 
