@@ -172,7 +172,7 @@ App.GasolineFight = DS.Model.extend({
 
         <section data-markdown>
           <script type="text/template">
-            A **drawing** is made of many **shape**s:
+            A **drawing** is made of many **shapes**:
 
             ```js
 App.Drawing = DS.Model.extend({
@@ -478,21 +478,59 @@ App.Circle = App.Shape.extend({
 
         <section data-markdown>
           <script type="text/template">
-            Different APIs?
+            Different adapters per type
 
-            Specify different adapter for each type
+            <img src="images/adapters.jpg"/>
+          </script>
+        </section>
 
-            Confirm ?? - Does this work?
+        <section data-markdown>
+          <script type="text/template">
+            API can serve references to other APIs
+          </script>
+        </section>
 
-            ```coffeescript
+        <section data-markdown>
+          <script type="text/template">
+            Contrived Example!
 
+            ```javascript
+            {
+              "user":{
+                ...
+                "avatar": {
+                  "id":"luke@precisionnutrition.com",
+                  "type":"gravatar"
+                }
+            }
             ```
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            Stuff that is broken
+            OR
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ```javascript
+            {
+              "user":{
+                ...
+                "avatar": {
+                  "id":"luke@precisionnutrition.com",
+                  "type":"s3"
+                }
+            }
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ?Problemas?
 
             <img src="images/broken.jpg"/>
           </script>
@@ -544,14 +582,6 @@ App.Circle = App.Shape.extend({
               // Does *not* work
             });
             ```
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            Fixture adapter does not support polymorphic associations
-
-            ???? (Confirm - is this true?)
           </script>
         </section>
 
