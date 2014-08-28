@@ -79,7 +79,8 @@
           <script type="text/template">
             ```javascript
 App.Person = DS.Model.extend({
-  name: attr('string')
+  name: attr('string'),
+  neckbeard: true
 });
             ```
           </script>
@@ -90,40 +91,10 @@ App.Person = DS.Model.extend({
             ```js
 App.Person = DS.Model.extend({
   name: attr('string'),
+  neckbeard: true,
   pets: hasMany('pet', { polymorphic: true })
 });
             ```
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            ```javascript
-App.Cat = App.Pet.extend({
-  cute: false, // I don't really like cats
-  livesRemaining: attr('number', {defaultValue: 9})
-});
-            ```
-          </script>
-        </section>
-
-
-        <section data-markdown>
-          <script type="text/template">
-            <img src="images/catexplosion.jpg" style="margin-top:0px;" />
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            ![Bomb](images/old_bomb.jpg)
-
-            ```javascript
-App.Bomb = DS.Model.extend({
-  megatons: DS.attr('number')
-});
-            ```
-
           </script>
         </section>
 
