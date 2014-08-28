@@ -63,39 +63,45 @@
           </script>
         </section>
 
-        <section data-markdown>
-          <script type="text/template">
+        <section>
+          <p>
             What are polymorphic associations?
-          </script>
+          </p>
+          <div class="fragment">
+            <br/>
+            <blockquote>
+              "A relationship from one class to multiple classes."
+            </blockquote>
+          </div>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            A relationship from one class to multiple classes.
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            Lots of things can **cause** an explosion:
-
-            ```js
-App.Explosion = DS.Model.extend({
-  size: DS.attr('number'),
-  cause: belongsTo('cause', { polymorphic: true })
+            ```javascript
+App.Person = DS.Model.extend({
+  name: attr('string')
 });
             ```
-
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            ![GasolineFight](images/zoolander_gasoline_fight_1.jpg)
+            ```js
+App.Person = DS.Model.extend({
+  name: attr('string'),
+  pets: hasMany('pet', { polymorphic: true })
+});
+            ```
+          </script>
+        </section>
 
+        <section data-markdown>
+          <script type="text/template">
             ```javascript
-App.GasolineFight = DS.Model.extend({
-  litres: DS.attr('number')
+App.Cat = App.Pet.extend({
+  cute: false, // I don't really like cats
+  livesRemaining: attr('number', {defaultValue: 9})
 });
             ```
           </script>
@@ -128,15 +134,15 @@ App.Bomb = DS.Model.extend({
             a common base class is required
 
             ```js
-App.Cause = DS.Model.extend({
+App.Pet = DS.Model.extend({
   ...
 });
 
-App.Bomb = App.Cause.extend({
+App.Cat = App.Pet.extend({
   ...
 });
 
-App.GasolineFight = App.Cause.extend({
+App.Dog = App.Pet.extend({
   ...
 });
             ```
@@ -148,15 +154,15 @@ App.GasolineFight = App.Cause.extend({
             Actually.. it&apos;s just that a common base class must exist
 
             ```js
-App.Cause = DS.Model.extend({
+App.Pet = DS.Model.extend({
   ...
 });
 
-App.Bomb = DS.Model.extend({
+App.Cat = DS.Model.extend({
   ...
 });
 
-App.GasolineFight = DS.Model.extend({
+App.Dog = DS.Model.extend({
   ...
 });
             ```
@@ -169,10 +175,16 @@ App.GasolineFight = DS.Model.extend({
           </script>
         </section>
 
-        <section data-markdown>
-          <script type="text/template">
-            {JSON:API} does not specify a format for polymorphic assocations
-          </script>
+        <section>
+          <img src="images/json_api.png"/>
+        </section>
+
+        <section>
+          <img src="images/json_api_2.png"/>
+        </section>
+
+        <section>
+          <img src="images/json_api_3.png"/>
         </section>
 
         <section data-markdown class="house">
@@ -222,10 +234,19 @@ App.GasolineFight = DS.Model.extend({
           </script>
         </section>
 
-        <section data-markdown>
-          <script type="text/template">
-            Active Model Serializer does not support polymorphic assocations
-          </script>
+        <section>
+          <img src="images/rails.png"/>
+          <img src="images/active_model_serializer.png"/>
+        </section>
+
+        <section>
+          <img src="images/rails.png"/>
+          <img src="images/ams_branches.png"/>
+        </section>
+
+        <section>
+          <img src="images/rails.png"/>
+          <img src="images/ams_v9.png"/>
         </section>
 
         <section data-markdown>
@@ -435,12 +456,6 @@ App.Circle = App.Shape.extend({
 
         <section data-markdown>
           <script type="text/template">
-            OR
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
             ```javascript
             {
               "user":{
@@ -562,6 +577,12 @@ App.Circle = App.Shape.extend({
                 drawing.save();
               });
             ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Tight coupling between API and Ember-Data
           </script>
         </section>
 
