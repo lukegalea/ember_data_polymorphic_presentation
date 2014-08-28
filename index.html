@@ -296,6 +296,10 @@ App.Dog = DS.Model.extend({
           </script>
         </section>
 
+        <section>
+          <img src="images/wufoo.png"/>
+        </section>
+
         <section data-markdown>
           <script type="text/template">
             A student curriculum is composed of many types of **Cards**.
@@ -355,38 +359,19 @@ App.Circle = App.Shape.extend({
 
         <section data-markdown>
           <script type="text/template">
-            Define a mapping between polymorphic models and views/components
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            Warning! Coffeescript ahead.
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            Model
-
-            ```coffeescript
-            Shape = DS.Model.extend
-              shapeType: (-> @constructor.toString() ).property()
-            ```
-
-            Component
-            ```coffeescript
-            SVGDisplay = Em.Component.extend
-              template: H.compile '{{render-component "shapeComponent" shapeBinding="shape"}}'
-              shapeType: alias 'shape.shapeType'
-
-              shapeComponent: (->
-                switch @get('shapeType')
-                  when "emberpaint@model:rectangle:" then "svg-rect"
-                  when "emberpaint@model:triangle:" then "svg-triangle"
-                  else
-                    throw "Unknown shape type"
-              ).property 'shapeType'
+            ```javascript
+            DisplayShape = Em.Component.extend({
+              shapeComponent: function() {
+                switch (this.get('shape').constructor.toString()) {
+                  case "emberpaint@model:rectangle:":
+                    return "svg-rect";
+                  case "emberpaint@model:triangle:":
+                    return "svg-triangle";
+                  default:
+                    throw "Unknown shape type";
+                }
+              }.property('shape')
+            });
             ```
           </script>
         </section>
@@ -423,18 +408,15 @@ App.Circle = App.Shape.extend({
           </script>
         </section>
 
-        <section data-markdown>
-          <script type="text/template">
+        <section>
+          <p>
             Different adapters per type
+          </p>
+          <img src="images/adapters.jpg"/>
 
-            <img src="images/adapters.jpg"/>
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
+          <p class="fragment">
             API can serve references to other APIs
-          </script>
+          </p>
         </section>
 
         <section data-markdown>
@@ -511,13 +493,9 @@ App.Circle = App.Shape.extend({
 
         <section data-markdown>
           <script type="text/template">
-            Or you can sideload...
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
             <img src="images/rails.png"/>
+
+            Sideload
 
 
             ```ruby
@@ -558,24 +536,6 @@ App.Circle = App.Shape.extend({
                 .....
               ]
             }
-            ```
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            Saving without resolving first
-
-            ```js
-              App.Drawing = DS.Model.extend({
-                shapes: belongsTo('shape', polymorphic: true, async: true)
-              });
-
-              store.find('drawing', 1).then(function(drawing) {
-                drawing.set('title', 'Mona Lisa');
-                // Must resolve shapes first!
-                drawing.save();
-              });
             ```
           </script>
         </section>
