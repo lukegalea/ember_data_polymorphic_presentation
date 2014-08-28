@@ -32,17 +32,6 @@
 
   <body>
 
-  <!-- What is polymorphic associations
-  What are some good use cases?
-
-  What does the API look like?
-
-  What are some problems with it?
-
-  Cool stuff you can do with it (composing interfaces, legacy API, etc)
-
-  How can I learn more? -->
-
     <div class="reveal">
 
       <!-- Any section element inside of this container is displayed as a slide -->
@@ -69,142 +58,148 @@
 
         <section data-markdown>
           <script type="text/template">
-            What are polymorphic associations?
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            A relationship from one class to multiple classes.
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            Lots of things can **cause** an explosion:
-
-            ```javascript
-App.Explosion = DS.Model.extend({
-  size: DS.attr('number'),
-  cause: belongsTo('cause', polymorphic: true)
-});
-            ```
-
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            ![GasolineFight](images/zoolander_gasoline_fight_1.jpg)
-
-            ```javascript
-App.GasolineFight = DS.Model.extend({
-  litres: DS.attr('number')
-});
-            ```
-          </script>
-        </section>
-
-
-        <section data-markdown>
-          <script type="text/template">
-            <img src="images/catexplosion.jpg" style="margin-top:0px;" />
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            ![Bomb](images/old_bomb.jpg)
-
-            ```javascript
-App.Bomb = DS.Model.extend({
-  megatons: DS.attr('number')
-});
-            ```
-
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            No common base class is required
-
-
-
-            ```javascript
-App.GasolineFight = DS.Model.extend({
-  ...
-});
-
-App.Bomb = DS.Model.extend({
-  ...
-});
-            ```
-
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            A **drawing** is made of many **shapes**:
-
-            ```javascript
-App.Drawing = DS.Model.extend({
-  shapes: belongsTo('shape', polymorphic: true)
-});
-            ```
-
-          </script>
-        </section>
-
-        <section data-markdown class="house">
-          <script type="text/template">
-            <img src="images/house_shapes.png" height="300" style="float: left; margin-top:0px; margin-right: 40px;"/>
-
-            ```javascript
-App.Shape = DS.Model.extend({
-  x: DS.attr('number'),
-  y: DS.attr('number'),
-  color: DS.attr('string')
-});
-
-App.Rectangle = App.Shape.extend({
-  height: DS.attr('number'),
-  width: DS.attr('number')
-});
-
-App.Circle = App.Shape.extend({
-  radius: DS.attr('number')
-});
-            ```
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            "When all you have is a hammer,<br />every problem resembles a nail."<br /><br />
-            - Anonymous
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
             "We use ED Polymorphic assocations a lot."<br /><br />
             - Me
           </script>
         </section>
 
+        <section>
+          <p>
+            What are polymorphic associations?
+          </p>
+          <div class="fragment">
+            <br/>
+            <blockquote>
+              "A relationship from one class to multiple classes."
+            </blockquote>
+          </div>
+        </section>
+
+        <section data-transition="fade">
+           <img width="300" src="images/neckbeard1.png" style="float: left; margin-right: 40px;"/>
+           <pre><code data-trim>
+Person = DS.Model.extend({
+  name: attr('string'),
+  neckbeard: true
+});
+            </code></pre>
+        </section>
+
+        <section data-transition="fade">
+           <img width="300" src="images/neckbeard1.png" style="float: left; margin-right: 40px;"/>
+           <pre><code data-trim>
+Person = DS.Model.extend({
+  name: attr('string'),
+  neckbeard: true,
+  pets: hasMany('pet', { polymorphic: true })
+});
+            </code></pre>
+        </section>
+
+        <section data-transition="fade">
+          <img width="300" src="images/neckbeard2.png" style="float: left; margin-right: 40px;"/>
+          <pre><code data-trim>
+Person = DS.Model.extend({
+  name: attr('string'),
+  neckbeard: true,
+  pets: hasMany('pet', { polymorphic: true })
+});
+
+Pet = DS.Model.extend({
+  owner: belongsTo('person')
+});
+
+Cat = Pet.extend({
+  lives: attr('number', {defaultValue: 9})
+});
+          </code></pre>
+        </section>
+
+        <section data-transition="fade">
+          <img width="300" src="images/neckbeard3.png" style="float: left; margin-right: 40px;"/>
+          <pre><code data-trim>
+App.Person = DS.Model.extend({
+  name: attr('string'),
+  neckbeard: true,
+  pets: hasMany('pet', { polymorphic: true })
+});
+
+Pet = DS.Model.extend({
+  owner: belongsTo('person')
+});
+
+Cat = Pet.extend({
+  lives: attr('number', {defaultValue: 9})
+});
+
+Dog = Pet.extend({
+  fleas: attr('number', {defaultValue: 0})
+});
+          </code></pre>
+        </section>
+
+        <section data-transition="fade">
+          <img width="300" src="images/neckbeard4.png" style="float: left; margin-right: 40px;"/>
+          <pre><code data-trim>
+App.Person = DS.Model.extend({
+  name: attr('string'),
+  neckbeard: true,
+  pets: hasMany('pet', { polymorphic: true })
+});
+
+Pet = DS.Model.extend({
+  owner: belongsTo('person')
+});
+
+Cat = Pet.extend({
+  lives: attr('number', {defaultValue: 9})
+});
+
+Dog = Pet.extend({
+  fleas: attr('number', {defaultValue: 0})
+});
+          </code></pre>
+        </section>
+
         <section data-markdown>
           <script type="text/template">
-            A student curriculum is composed of many types of **Cards**.
-            <img height="550" src="images/cards_composed.png"/>
+            As of Ember-Data 1.0b9
+
+            a common base class is required
+
+            ```js
+App.Pet = DS.Model.extend({
+  ...
+});
+
+App.Cat = App.Pet.extend({
+  ...
+});
+
+App.Dog = App.Pet.extend({
+  ...
+});
+            ```
           </script>
         </section>
 
         <section data-markdown>
           <script type="text/template">
-            A **Card** is composed of many primitive elements.
-            <img src="images/card_admin.png" height="550"/>
+            Actually.. it&apos;s just that a common base class must exist
+
+            ```js
+App.Pet = DS.Model.extend({
+  ...
+});
+
+App.Cat = DS.Model.extend({
+  ...
+});
+
+App.Dog = DS.Model.extend({
+  ...
+});
+            ```
           </script>
         </section>
 
@@ -214,10 +209,20 @@ App.Circle = App.Shape.extend({
           </script>
         </section>
 
-        <section data-markdown>
-          <script type="text/template">
-            {JSON:API} does not specify a format for polymorphic assocations
-          </script>
+        <section>
+          <img src="images/json_api.png"/>
+        </section>
+
+        <section>
+          <img src="images/json_api_2.png"/>
+        </section>
+
+        <section>
+          <img src="images/json_api_3.png"/>
+        </section>
+
+        <section>
+          <img src="images/insanity_wolfe.jpg"/>
         </section>
 
         <section data-markdown class="house">
@@ -267,10 +272,19 @@ App.Circle = App.Shape.extend({
           </script>
         </section>
 
-        <section data-markdown>
-          <script type="text/template">
-            Active Model Serializer does not support polymorphic assocations
-          </script>
+        <section>
+          <img src="images/rails.png"/>
+          <img src="images/active_model_serializer.png"/>
+        </section>
+
+        <section>
+          <img src="images/rails.png"/>
+          <img src="images/ams_branches.png"/>
+        </section>
+
+        <section>
+          <img src="images/rails.png"/>
+          <img src="images/ams_v9.png"/>
         </section>
 
         <section data-markdown>
@@ -307,6 +321,186 @@ App.Circle = App.Shape.extend({
           </script>
         </section>
 
+        <section>
+          <img src="images/requests_1.png"/>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Composing views using polymorphic models
+            <img src="images/bob.jpg"/>
+          </script>
+        </section>
+
+        <section>
+          <img src="images/wufoo.png"/>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            A student curriculum is composed of many types of **Cards**.
+            <img height="550" src="images/cards_composed.png"/>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            A **Card** is composed of many primitive elements.
+            <img src="images/card_admin.png" height="550"/>
+          </script>
+        </section>
+
+        <section>
+          <div class="stretch">
+            <h1>DEMO</h1>
+            <!-- <iframe src="http://127.0.0.1:4200/drawings/1" height="100%" width="100%" /> -->
+          </div>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            A **drawing** is made of many **shapes**:
+
+            ```js
+App.Drawing = DS.Model.extend({
+  shapes: belongsTo('shape', { polymorphic: true })
+});
+            ```
+
+          </script>
+        </section>
+
+        <section data-markdown class="house">
+          <script type="text/template">
+            <img src="images/house_shapes.png" height="300" style="float: left; margin-top:0px; margin-right: 40px;"/>
+
+            ```javascript
+App.Shape = DS.Model.extend({
+  x: DS.attr('number'),
+  y: DS.attr('number'),
+  color: DS.attr('string')
+});
+
+App.Rectangle = App.Shape.extend({
+  height: DS.attr('number'),
+  width: DS.attr('number')
+});
+
+App.Circle = App.Shape.extend({
+  radius: DS.attr('number')
+});
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ```javascript
+            DisplayShape = Em.Component.extend({
+              shapeComponent: function() {
+                switch (this.get('shape').constructor.toString()) {
+                  case "emberpaint@model:rectangle:":
+                    return "svg-rect";
+                  case "emberpaint@model:triangle:":
+                    return "svg-triangle";
+                  default:
+                    throw "Unknown shape type";
+                }
+              }.property('shape')
+            });
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Rendering views dynamically based on type
+
+            ```handlebars
+            <p>
+              <label>{{name}}</label>
+              {{view view.elementViewType}}
+            </p>
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            A helper to dynamically render a component
+
+            ```js
+              var H = Em.Handlebars;
+
+              H.registerHelper('renderComponent',
+                function(componentPath, options) {
+                  var component = H.get(this, componentPath, options),
+                      helper = H.resolveHelper(options.data.view.container, component);
+
+                  helper.call(this, options);
+                }
+              );
+            ```
+          </script>
+        </section>
+
+        <section>
+          <p>
+            Different adapters per type
+          </p>
+          <img src="images/adapters.jpg"/>
+
+          <p class="fragment">
+            API can serve references to other APIs
+          </p>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Contrived Example!
+
+            ```javascript
+            {
+              "user":{
+                ...
+                "avatar": {
+                  "id":"luke@precisionnutrition.com",
+                  "type":"gravatar"
+                }
+            }
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ```javascript
+            {
+              "user":{
+                ...
+                "avatar": {
+                  "id":"luke@precisionnutrition.com",
+                  "type":"s3"
+                }
+            }
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ¿Problemas?
+
+            <img src="images/broken.jpg"/>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            <img src="images/too_damn_high.jpg"/>
+          </script>
+        </section>
+
         <section data-markdown>
           <script type="text/template">
             3 seperate requests
@@ -335,13 +529,9 @@ App.Circle = App.Shape.extend({
 
         <section data-markdown>
           <script type="text/template">
-            Or you can sideload...
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
             <img src="images/rails.png"/>
+
+            Sideload
 
 
             ```ruby
@@ -360,7 +550,7 @@ App.Circle = App.Shape.extend({
           <script type="text/template">
             <img src="images/house_shapes.png" height="300" style="float:left; margin-right:40px;"/>
 
-            ```javascript
+            ```js
             {
               "drawing":{
                 ......
@@ -388,103 +578,7 @@ App.Circle = App.Shape.extend({
 
         <section data-markdown>
           <script type="text/template">
-            Composing views using polymorphic models
-            <img src="images/bob.jpg"/>
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            Rendering views dynamically based on type
-
-            ```handlebars
-            <p>
-              <label>{{name}}</label>
-              {{view view.elementViewType}}
-            </p>
-            ```
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            A helper to dynamically render a component
-
-            ```javascript
-              var H = Em.Handlebars;
-
-              H.registerHelper('renderComponent',
-                function(componentPath, options) {
-                  var component = H.get(this, componentPath, options),
-                      helper = H.resolveHelper(options.data.view.container, component);
-
-                  helper.call(this, options);
-                }
-              );
-            ```
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            Model
-            ```coffeescript
-            Shape = DS.Model.extend
-              shapeType: (-> @constructor.toString() ).property()
-            ```
-
-            Component
-            ```coffeescript
-            SVGDisplay = Em.Component.extend
-              template: H.compile '{{render-component "shapeComponent" shape=shape}}'
-              shapeType: alias 'shape.shapeType'
-
-              shapeComponent: (->
-                switch @get('shapeType')
-                  when "emberpaint@model:rectangle:" then "svg-rect"
-                  when "emberpaint@model:triangle:" then "svg-triangle"
-                  else
-                    throw "Unknown shape type"
-              ).property 'shapeType'
-            ```
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            Different APIs?
-
-            Specify different adapter for each type
-
-            ```coffeescript
-
-            ```
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            Stuff that is broken
-
-            <img src="images/broken.jpg"/>
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            Saving without resolving first
-
-            ```javascript
-              App.Drawing = DS.Model.extend({
-                shapes: belongsTo('shape', polymorphic: true, async: true)
-              });
-
-              store.find('drawing', 1).then(function(drawing) {
-                drawing.set('title', 'Mona Lisa');
-                // Must resolve shapes first!
-                drawing.save();
-              });
-            ```
+            Tight coupling between API and Ember-Data
           </script>
         </section>
 
@@ -492,7 +586,7 @@ App.Circle = App.Shape.extend({
           <script type="text/template">
             Reloading a polymorphic hasMany
 
-            ```javascript
+            ```js
             store.find('drawing', 1).then(function(drawing) {
               drawing.get('shapes').then(function(shapes) {
                 shapes.reload();
@@ -510,7 +604,7 @@ App.Circle = App.Shape.extend({
 
             Not **polymorphic endpoints**
 
-            ```javascript
+            ```js
             store.find('vehicles').then(function(vehicles) {
               // Where vehicle could be a car, truck, boat
               // Does *not* work
