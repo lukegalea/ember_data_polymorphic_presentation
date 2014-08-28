@@ -75,27 +75,90 @@
           </div>
         </section>
 
-        <section data-markdown>
-          <script type="text/template">
-            ```javascript
-App.Person = DS.Model.extend({
+        <section data-transition="fade">
+           <img width="300" src="images/neckbeard1.png" style="float: left; margin-right: 40px;"/>
+           <pre><code data-trim>
+Person = DS.Model.extend({
   name: attr('string'),
   neckbeard: true
 });
-            ```
-          </script>
+            </code></pre>
         </section>
 
-        <section data-markdown>
-          <script type="text/template">
-            ```js
+        <section data-transition="fade">
+           <img width="300" src="images/neckbeard1.png" style="float: left; margin-right: 40px;"/>
+           <pre><code data-trim>
+Person = DS.Model.extend({
+  name: attr('string'),
+  neckbeard: true,
+  pets: hasMany('pet', { polymorphic: true })
+});
+            </code></pre>
+        </section>
+
+        <section data-transition="fade">
+          <img width="300" src="images/neckbeard2.png" style="float: left; margin-right: 40px;"/>
+          <pre><code data-trim>
+Person = DS.Model.extend({
+  name: attr('string'),
+  neckbeard: true,
+  pets: hasMany('pet', { polymorphic: true })
+});
+
+Pet = DS.Model.extend({
+  owner: belongsTo('person')
+});
+
+Cat = Pet.extend({
+  lives: attr('number', {defaultValue: 9})
+});
+          </code></pre>
+        </section>
+
+        <section data-transition="fade">
+          <img width="300" src="images/neckbeard3.png" style="float: left; margin-right: 40px;"/>
+          <pre><code data-trim>
 App.Person = DS.Model.extend({
   name: attr('string'),
   neckbeard: true,
   pets: hasMany('pet', { polymorphic: true })
 });
-            ```
-          </script>
+
+Pet = DS.Model.extend({
+  owner: belongsTo('person')
+});
+
+Cat = Pet.extend({
+  lives: attr('number', {defaultValue: 9})
+});
+
+Dog = Pet.extend({
+  fleas: attr('number', {defaultValue: 0})
+});
+          </code></pre>
+        </section>
+
+        <section data-transition="fade">
+          <img width="300" src="images/neckbeard4.png" style="float: left; margin-right: 40px;"/>
+          <pre><code data-trim>
+App.Person = DS.Model.extend({
+  name: attr('string'),
+  neckbeard: true,
+  pets: hasMany('pet', { polymorphic: true })
+});
+
+Pet = DS.Model.extend({
+  owner: belongsTo('person')
+});
+
+Cat = Pet.extend({
+  lives: attr('number', {defaultValue: 9})
+});
+
+Dog = Pet.extend({
+  fleas: attr('number', {defaultValue: 0})
+});
+          </code></pre>
         </section>
 
         <section data-markdown>
@@ -156,6 +219,10 @@ App.Dog = DS.Model.extend({
 
         <section>
           <img src="images/json_api_3.png"/>
+        </section>
+
+        <section>
+          <img src="images/insanity_wolfe.jpg"/>
         </section>
 
         <section data-markdown class="house">
@@ -254,10 +321,8 @@ App.Dog = DS.Model.extend({
           </script>
         </section>
 
-        <section data-markdown>
-          <script type="text/template">
-            That&apos;s it!
-          </script>
+        <section>
+          <img src="images/requests_1.png"/>
         </section>
 
         <section data-markdown>
