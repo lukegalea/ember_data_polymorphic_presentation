@@ -163,7 +163,7 @@ Dog = Pet.extend({
 
         <section data-markdown>
           <script type="text/template">
-            As of Ember-Data 1.0b9
+            As of Ember-Data 1.0b11
 
             a common base class is required
 
@@ -185,21 +185,9 @@ App.Dog = App.Pet.extend({
 
         <section data-markdown>
           <script type="text/template">
-            Actually.. it&apos;s just that a common base class must exist
+            There's a [Pull Request](https://github.com/emberjs/data/pull/2345 "Pull Request") open to allow unrelated polymorphic types
 
-            ```js
-App.Pet = DS.Model.extend({
-  ...
-});
-
-App.Cat = DS.Model.extend({
-  ...
-});
-
-App.Dog = DS.Model.extend({
-  ...
-});
-            ```
+            <img src="images/common_baseclass.png"/>
           </script>
         </section>
 
@@ -492,6 +480,75 @@ App.Circle = App.Shape.extend({
             ¿Problemas?
 
             <img src="images/broken.jpg"/>
+          </script>
+        </section>
+
+        <section>
+          <img src="images/philosoraptor.jpg"/>
+        </section>
+
+        <section data-markdown class="house">
+          <script type="text/template">
+            Tight coupling between API and Ember-Data
+            <img src="images/house_shapes.png" height="300" style="float: left; margin-right: 40px;" />
+
+
+            ```javascript
+            {
+              "drawing":{
+                "id":1,
+                "title":"A house",
+                "shapes":[
+                  {
+                    "id":1,
+                    "type":"Rectangle"
+                  },
+                  {
+                    "id":2,
+                    "type":"Rectangle"
+                  },
+                  {
+                    "id":3,
+                    "type":"Triangle"
+                  }
+                ]
+              }
+            }
+            ```
+            <h3 class="fragment" style="position: relative; left: 118px; top: -346px; color: red;">QUADRANGLE</h3>
+            <h3 class="fragment" style="position: relative; left: 118px; top: -329px; color: red;">QUADRANGLE</h3>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Map type key to ember model name
+
+            ```javascript
+            typeMap = {
+              quadrangle: 'rectangle',
+              rectangle: 'quadrangle'
+            };
+
+            mapType = function(key) {
+              return typeMap[key.underscore()] || key;
+            };
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Custom Adapter
+
+            ```javascript
+            ApplicationAdapter = DS.ActiveModelAdapter.extend({
+              pathForType: function(type) {
+                return this._super( mapType(type) );
+              }
+            });
+            ```
+            <span class="fragment" style="position: relative; top: -87px; left: -100px; color: red;font-size: 3em;">&#8593;</span>
           </script>
         </section>
 
