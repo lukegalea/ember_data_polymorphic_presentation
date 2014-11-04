@@ -539,6 +539,19 @@ App.Circle = App.Shape.extend({
 
         <section data-markdown>
           <script type="text/template">
+            Endpoint Mapping
+
+            ```javascript
+            this.store.find('quadrangle', 1);
+            ```
+            <p class="fragment">
+              <small>/quadrangles/1 &#8594; /rectangles/1</small>
+            </p>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
             Custom Adapter
 
             ```javascript
@@ -549,6 +562,93 @@ App.Circle = App.Shape.extend({
             });
             ```
             <span class="fragment" style="position: relative; top: -87px; left: -100px; color: red;font-size: 3em;">&#8593;</span>
+            <p class="fragment">
+              <small>/quadrangles/1 &#8594; /rectangles/1</small>
+            </p>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            JSON Mapping
+
+            ```javascript
+              {
+                "rectangle": {
+                  "id": "1",
+                  ....
+                }
+              }
+            ```
+            <h3 class="fragment" style="position: relative; left: -344px; top: -212px; color: red;">quadrangle</h3>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Custom Serializer
+
+            ```javascript
+            ApplicationSerializer = DS.ActiveModelSerializer.extend({
+
+              typeForRoot: function(key) {
+                return this._super( mapType(key) );
+              },
+
+              serializeIntoHash: function(data, type, record, options) {
+                var key, typeKey;
+                typeKey = type.typeKey;
+                key = mapType(typeKey);
+                return data[key] = this.serialize(record, options);
+              }
+
+            });
+            ```
+            <span class="fragment" style="position: relative; top: -297px; left: 254px; color: red; font-size: 1.5em;">
+              &#8593; &nbsp;
+              JSON &#8594; Model
+            </span>
+            <span class="fragment" style="position: relative; top: -132px; left: -307px; color: red; font-size: 1.5em;">
+              &#8593; &nbsp;
+              Model &#8594; JSON
+            </span>
+          </script>
+        </section>
+
+        <section>
+          <img src="images/bush-mission-accomplished-iraq-thumbsup.jpg"/>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Mission Accomplished?
+
+            ```js
+            {
+               "drawing":{
+                  "id":1,
+                  "title":"A house",
+                  "shapes":[
+                     { "id":1,
+                       "type":"Rectangle"
+                     },
+                     { "id":4,
+                       "type":"Circle"
+                     }
+                  ]
+               }
+            }
+            ```
+
+            <img class="fragment" src="images/missing_model.png"/>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            This problem is not unique to polymorphic associations
+
+            (Sideloading, etc)
           </script>
         </section>
 
@@ -630,12 +730,6 @@ App.Circle = App.Shape.extend({
               ]
             }
             ```
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            Tight coupling between API and Ember-Data
           </script>
         </section>
 
