@@ -198,6 +198,10 @@ App.Dog = App.Pet.extend({
         </section>
 
         <section>
+          <img src="images/requests_1.png"/>
+        </section>
+
+        <section>
           <img src="images/json_api.png"/>
         </section>
 
@@ -309,10 +313,6 @@ App.Dog = App.Pet.extend({
           </script>
         </section>
 
-        <section>
-          <img src="images/requests_1.png"/>
-        </section>
-
         <section data-markdown>
           <script type="text/template">
             Composing views using polymorphic models
@@ -384,17 +384,12 @@ App.Circle = App.Shape.extend({
         <section data-markdown>
           <script type="text/template">
             ```javascript
-            DisplayShape = Em.Component.extend({
-              shapeComponent: function() {
-                switch (this.get('shape').constructor.toString()) {
-                  case "emberpaint@model:rectangle:":
-                    return "svg-rect";
-                  case "emberpaint@model:triangle:":
-                    return "svg-triangle";
-                  default:
-                    throw "Unknown shape type";
-                }
-              }.property('shape')
+            Shape = DS.Model.extend({
+
+              shapeType: function() {
+                this.constructor.typeKey
+              }.property()
+
             });
             ```
           </script>
@@ -477,7 +472,7 @@ App.Circle = App.Shape.extend({
 
         <section data-markdown>
           <script type="text/template">
-            ¿Problemas?
+            The Badness
 
             <img src="images/broken.jpg"/>
           </script>
