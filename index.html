@@ -427,6 +427,29 @@ App.Circle = App.Shape.extend({
           </script>
         </section>
 
+        <section data-markdown>
+          <script type="text/template">
+            Polymorphic Endpoints
+
+            ```js
+            this.store.find('shapes').then(function(shapes) {
+              // ?
+            });
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            ```ruby
+              class RectangleSerializer < ActiveModel::Serializer
+                attributes ..., :type
+              end
+
+            ```
+          </script>
+        </section>
+
         <section>
           <p>
             Different adapters per type
@@ -730,6 +753,45 @@ App.Circle = App.Shape.extend({
 
         <section data-markdown>
           <script type="text/template">
+            ```js
+            Ember.MODEL_FACTORY_INJECTIONS = true;
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            <img src="images/MFI_error.png"/>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            doubleplusungood
+            ```js
+            Ember.assert(..., record instanceof this.type);
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            rectified
+            ```js
+            App.Shape.detect(myRectangle.constructor)
+            ```
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            [Pull Request](https://github.com/emberjs/data/pull/2316 "Pull Request")
+            <img src="images/mfi_pr.png"/>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
             Reloading a polymorphic hasMany
 
             ```js
@@ -741,21 +803,6 @@ App.Circle = App.Shape.extend({
             ```
             Courtesy of Igor Terzic
             <span style="font-size: 0.85em;">https://github.com/emberjs/data/commits/reloadHasManyAttempt2</span>
-          </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            Ember-Data only supports **polymorphic assocations**
-
-            Not **polymorphic endpoints**
-
-            ```js
-            store.find('vehicles').then(function(vehicles) {
-              // Where vehicle could be a car, truck, boat
-              // Does *not* work
-            });
-            ```
           </script>
         </section>
 
