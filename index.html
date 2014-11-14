@@ -44,6 +44,13 @@
           <p>
             <a href="http://www.precisionnutrition.com"><img class="pn_logo" src="images/pn-logo-flat.svg"/></a>
           </p>
+          <aside class="notes" data-markdown>
+            * Introduction
+            * Agenda
+              * Primer
+              * Crazy / Unexpected use cases
+              * Problems / Solutions
+          </aside>
         </section>
 
         <section data-markdown>
@@ -54,6 +61,10 @@
 
             Nutrition and fitness coaching
           </script>
+          <aside class="notes" data-markdown>
+            * CTO at PN
+            * Nutrition + Fitness Coaching
+          </aside>
         </section>
 
         <section data-markdown>
@@ -61,6 +72,15 @@
             "We use ED Polymorphic assocations a lot."<br /><br />
             - Me
           </script>
+          <aside class="notes" data-markdown>
+            * Problem domain well suited?
+            * Learning Management System
+            * Core tech that drives our system
+            * 3rd talk so far
+              * 1st time: cautionary tale
+              * 2nd time: help navigate minefield
+              * now: Actually pretty much works / has solutions to all problems
+          </aside>
         </section>
 
         <section>
@@ -83,6 +103,9 @@ Person = DS.Model.extend({
   neckbeard: true
 });
             </code></pre>
+            <aside class="notes" data-markdown>
+              Average ember developer
+            </aside>
         </section>
 
         <section data-transition="fade">
@@ -158,6 +181,10 @@ Cat = Pet.extend({
 Dog = Pet.extend({
   fleas: attr('number', {defaultValue: 0})
 });
+
+HoneyBadger = Pet.extend({
+  viciousness: attr('number', {defaultValue: 0})
+});
           </code></pre>
         </section>
 
@@ -195,10 +222,17 @@ App.Dog = App.Pet.extend({
           <script type="text/template">
             <img src="images/how_does_it_work.jpg" height="600px" style="margin-top:0px;"/>
           </script>
+          <aside class="notes" data-markdown>
+            Assuming that covers the ember side, how do you actually wire it up with a backend?
+          </aside>
         </section>
 
         <section>
           <img src="images/requests_1.png"/>
+          <aside class="notes" data-markdown>
+            * Goal for a simple implementation is request like these
+            * Thinking: JSON-API
+          </aside>
         </section>
 
         <section>
@@ -211,6 +245,10 @@ App.Dog = App.Pet.extend({
 
         <section>
           <img src="images/json_api_3.png"/>
+          <aside class="notes" data-markdown>
+            * No, we can't let things like warnings from experts in the field
+            * or lack of documentation deter us.
+          </aside>
         </section>
 
         <section>
@@ -245,6 +283,12 @@ App.Dog = App.Pet.extend({
             }
             ```
           </script>
+          <aside class="notes" data-markdown>
+            * Demo App
+            * Ember 1.8, Ember-Data 1.0 Beta 11
+            * (Always use beta E-D)
+            * Rails backend
+          </aside>
         </section>
 
         <section data-markdown>
@@ -262,6 +306,11 @@ App.Dog = App.Pet.extend({
             }
             ```
           </script>
+          <aside class="notes" data-markdown>
+            * Time to implement server side.
+            * thinking "I got this one"
+            * ActiveModelSerializer supports polymorphic
+          </aside>
         </section>
 
         <section>
@@ -272,11 +321,20 @@ App.Dog = App.Pet.extend({
         <section>
           <img src="images/rails.png"/>
           <img src="images/ams_branches.png"/>
+          <aside class="notes" data-markdown>
+            * It used to support it (in 0.9)
+            * 0.8 (stable) does not
+            * Master is based off 0.8
+          </aside>
         </section>
 
         <section>
           <img src="images/rails.png"/>
           <img src="images/ams_v9.png"/>
+          <aside class="notes" data-markdown>
+            * If you *were* using 0.9
+            * Otherwise - hack it!
+          </aside>
         </section>
 
         <section data-markdown>
@@ -310,6 +368,17 @@ App.Dog = App.Pet.extend({
                 end
               end
             ```
+            <aside class="notes" data-markdown>
+              * There's a guide that shows how to backport polymorphic true from 0.9 to 0.8
+
+              * Assuming you've wired it all up, everything should be good!
+            </aside>
+          </script>
+        </section>
+
+        <section data-markdown>
+          <script type="text/template">
+            Cool Stuff
           </script>
         </section>
 
@@ -322,6 +391,15 @@ App.Dog = App.Pet.extend({
 
         <section>
           <img src="images/wufoo.png"/>
+
+          <aside class="notes" data-markdown>
+            * The form builder
+            * Every few years I find myself building another
+            * Every time it gets better
+            * Share in common: Forms has many "things"
+            * All different
+            * Pull them together to compose an interface
+          </aside>
         </section>
 
         <section data-markdown>
@@ -379,6 +457,9 @@ App.Circle = App.Shape.extend({
 });
             ```
           </script>
+          <aside class="notes" data-markdown>
+            * Given the models, we need a way to render the drawing
+          </aside>
         </section>
 
         <section data-markdown>
@@ -425,6 +506,9 @@ App.Circle = App.Shape.extend({
               );
             ```
           </script>
+          <aside class="notes" data-markdown>
+            * Poof! Time for another cool thing
+          </aside>
         </section>
 
         <section data-markdown>
@@ -437,18 +521,29 @@ App.Circle = App.Shape.extend({
             });
             ```
           </script>
+          <aside class="notes" data-markdown>
+            * You are thinking: sweet
+            * Try it out..
+          </aside>
         </section>
 
         <section data-markdown>
           <script type="text/template">
             <img src="images/polymorphic_endpoint_1.png"/>
           </script>
+          <aside class="notes" data-markdown>
+            * Notice: The shapes are *Shapes*
+          </aside>
         </section>
 
         <section data-markdown>
           <script type="text/template">
             <img src="images/polymorphic_endpoint_2.png"/>
           </script>
+          <aside class="notes" data-markdown>
+            * The "Rectangle"s are unfullfilled promises
+            * What do we do?
+          </aside>
         </section>
 
         <section data-markdown>
@@ -460,6 +555,11 @@ App.Circle = App.Shape.extend({
 
             ```
           </script>
+          <aside class="notes" data-markdown>
+            * This does nothing, but it gives us enough data to solve
+            * E-D decides on the model based on the "root" json key
+            * So "shapes" -> Shape
+          </aside>
         </section>
 
         <section data-markdown>
@@ -485,6 +585,12 @@ App.Circle = App.Shape.extend({
             });
             ```
           </script>
+          <aside class="notes" data-markdown>
+            * Hack the store so it uses the "type" key if it exists
+            * Yes, we are making the type key "magic"
+            * Like Rails
+            * Hooray: We are no less brittle than Rails
+          </aside>
         </section>
 
         <section data-markdown>
@@ -502,6 +608,12 @@ App.Circle = App.Shape.extend({
             this.store.find('bootstrap')
             ```
           </script>
+          <aside class="notes" data-markdown>
+            * Unexpected consequence
+            * Allow us to return a bunch of unrelated data
+            * For example, to bootstrap an app
+            * If you are thinking that's crazy..
+          </aside>
         </section>
 
         <section>
@@ -553,6 +665,9 @@ App.Circle = App.Shape.extend({
 
             <img src="images/broken.jpg"/>
           </script>
+          <aside class="notes" data-markdown>
+            * You'll be happy to know that most of the badness has workarounds
+          </aside>
         </section>
 
         <section>
@@ -590,6 +705,11 @@ App.Circle = App.Shape.extend({
             <h3 class="fragment" style="position: relative; left: 118px; top: -346px; color: red;">QUADRANGLE</h3>
             <h3 class="fragment" style="position: relative; left: 118px; top: -329px; color: red;">QUADRANGLE</h3>
           </script>
+          <aside class="notes" data-markdown>
+            * Forced to work with an API
+            * Where I come from we call them QUADrangles!
+            * In the past this meant compromise, but not anymore!
+          </aside>
         </section>
 
         <section data-markdown>
@@ -620,6 +740,10 @@ App.Circle = App.Shape.extend({
               <small>/quadrangles/1 &#8594; /rectangles/1</small>
             </p>
           </script>
+          <aside class="notes" data-markdown>
+            * 1st problem
+            * E-D doesn't know where to find quadrangles in the API
+          </aside>
         </section>
 
         <section data-markdown>
@@ -654,6 +778,11 @@ App.Circle = App.Shape.extend({
             ```
             <h3 class="fragment" style="position: relative; left: -344px; top: -212px; color: red;">quadrangle</h3>
           </script>
+          <aside class="notes" data-markdown>
+            * 2nd problem
+              * Given this json root key
+              * ED is going to want to create rectangles
+          </aside>
         </section>
 
         <section data-markdown>
@@ -689,6 +818,11 @@ App.Circle = App.Shape.extend({
 
         <section>
           <img src="images/bush-mission-accomplished-iraq-thumbsup.jpg"/>
+          <aside class="notes" data-markdown>
+            * We did it!
+            * Type key, no longer brittle
+            * No longer fraught with problems
+          </aside>
         </section>
 
         <section data-markdown>
@@ -714,14 +848,10 @@ App.Circle = App.Shape.extend({
 
             <img class="fragment" src="images/missing_model.png"/>
           </script>
-        </section>
-
-        <section data-markdown>
-          <script type="text/template">
-            This problem is not unique to polymorphic associations
-
-            (Sideloading, etc)
-          </script>
+          <aside class="notes" data-markdown>
+            * This problem is not unique to polymorphic associations
+            * (Sideloading, etc)
+          </aside>
         </section>
 
         <section data-markdown>
@@ -738,6 +868,9 @@ App.Circle = App.Shape.extend({
 
             <img src="images/requests_1.png"/>
           </script>
+          <aside class="notes" data-markdown>
+            * Similar to N+1 problem on server side
+          </aside>
         </section>
 
         <section data-markdown>
@@ -746,6 +879,9 @@ App.Circle = App.Shape.extend({
 
             <img src="images/request_2.png"/>
           </script>
+          <aside class="notes" data-markdown>
+            True story
+          </aside>
         </section>
 
         <section data-markdown>
@@ -754,6 +890,12 @@ App.Circle = App.Shape.extend({
 
             <img src="images/requests_3.png"/>
           </script>
+          <aside class="notes" data-markdown>
+            * On the server side you would solve this with "includes"
+            * in E-D you can solve this with sideloading
+            * but it's a bit tougher because AMS doesn't support polymorphism
+            * HACK it!
+          </aside>
         </section>
 
         <section data-markdown>
@@ -773,6 +915,10 @@ App.Circle = App.Shape.extend({
 
             ```
           </script>
+          <aside class="notes" data-markdown>
+            * Manually maintain a list of all possible sub-types
+            * Not very elegant or DRY
+          </aside>
         </section>
 
         <section data-markdown class="house">
@@ -809,6 +955,11 @@ App.Circle = App.Shape.extend({
           <script type="text/template">
             STI?
           </script>
+          <aside class="notes" data-markdown>
+            * Similarly, we can look to the server side solution
+            * Single Table Inheritance
+            * A single API endpoint for all types
+          </aside>
         </section>
 
         <section data-markdown>
@@ -819,6 +970,10 @@ App.Circle = App.Shape.extend({
 
             <img src="images/sti.png"/>
           </script>
+          <aside class="notes" data-markdown>
+            * Great guide on this.
+            * Really complicated. Decide if it's worth it
+          </aside>
         </section>
 
         <section data-markdown>
@@ -827,12 +982,21 @@ App.Circle = App.Shape.extend({
             Ember.MODEL_FACTORY_INJECTIONS = true;
             ```
           </script>
+          <aside class="notes" data-markdown>
+            * Default in Ember-CLI today
+            * Allows dependency injection into models
+          </aside>
         </section>
 
         <section data-markdown>
           <script type="text/template">
             <img src="images/MFI_error.png"/>
           </script>
+          <aside class="notes" data-markdown>
+            * Stems from the check for common baseclass
+            * slated for removal?
+            * Given they *are* descendent, what is going on?
+          </aside>
         </section>
 
         <section data-markdown>
@@ -842,6 +1006,9 @@ App.Circle = App.Shape.extend({
             Ember.assert(..., record instanceof this.type);
             ```
           </script>
+          <aside class="notes" data-markdown>
+            * When using MFI, instanceof doesn't work
+          </aside>
         </section>
 
         <section data-markdown>
